@@ -172,15 +172,40 @@ code environment
 
 ```bash
 sudo dnf install onedrive
-mkdir -p ~/.config/onedrive
-echo /secrets >~/.config/onedrive/sync_list
+mkdir -p ~/.config/onedrive/accounts/svkogan78@gmail.com
+echo /secrets >~/.config/onedrive/accounts/svkogan78@gmail.com/sync_list
 ```
+
+If there is one account:
 
 ```bash
 onedrive --synchronize --resync
 systemctl --user enable onedrive
 systemctl --user start onedrive
 journalctl --user-unit=onedrive -f
+```
+
+If there are multiple accounts:
+
+```bash
+onedrive --confdir=/home/sekogan/.config/onedrive/accounts/svkogan78@gmail.com --synchronize --resync
+onedrive --confdir=/home/sekogan/.config/onedrive/accounts/svkogan78@gmail.com --monitor -v
+```
+
+```bash
+sudo cp /usr/lib/systemd/user/onedrive{,-svkogan78}.service
+sudo vi /usr/lib/systemd/user/onedrive-svkogan78.service
+```
+
+```config
+ExecStart=/usr/bin/onedrive --monitor --confdir=/home/sekogan/.config/onedrive/accounts/svkogan78@gmail.com
+```
+
+```bash
+systemctl --user enable onedrive-svkogan78
+journalctl --user-unit=onedrive-svkogan78 -f
+echo alias onedrivelog=\'journalctl --user-unit=onedrive-svkogan78 -f\' >>~/.bashrc
+source ~/.bashrc
 ```
 
 ## KeePass
