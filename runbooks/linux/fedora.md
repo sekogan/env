@@ -104,7 +104,7 @@ Open settings:
   - Switch applications = Super + Tab
   - Add
     - Launch terminal
-    - gnome-terminal (or terminator)
+    - `ptyxis --new-window`
     - Ctrl+Alt+T
 - Region & Language
   - Formats -> select Russian
@@ -118,7 +118,6 @@ Install Gnome Tweaks (in Software).
   - Key to choose the 3rd level -> disable Right Alt
 - Top Bar
   - Activities Overview Hot Corner -> Off
-  - Week Numbers -> On
 
 Open Preferences in file manager:
 
@@ -155,8 +154,8 @@ Open Preferences in Firefox:
 Configure git:
 
 ```bash
-git config --global user.name "Sergey Kogan"
-git config --global user.email sekogan@gmail.com
+git config --global user.name "Sergei Kogan"
+git config --global user.email foo@gmail.com
 git config --global credential.helper libsecret
 ```
 
@@ -186,7 +185,7 @@ journalctl --user-unit=onedrive -f
 
 ## KeePass
 
-Start KeePassXC. Open ~/OneDrive/secrets/kogan_secrets_v9.kdbx.
+Start KeePassXC. Open the password database in `~/OneDrive/secrets/`.
 
 ## Github access
 
@@ -252,9 +251,9 @@ Open Settings:
 
 ## Advanced Gnome
 
-Run Clocks and add world clocks (Yekaterinburg, UTC, Houston).
+Run Clocks and add world clocks.
 
-Run Weather and select Moscow.
+Run Weather and select current location.
 
 Optionally add online accounts:
 
@@ -312,28 +311,6 @@ Install optional extensions:
 - [workspace-grid](https://extensions.gnome.org/extension/484/workspace-grid/)
 
 Remove unwanted applications from Dock.
-
-## System
-
-Reduce swap usage:
-
-```bash
-sudo vi /etc/sysctl.d/99-swappiness.conf
-```
-
-```bash
-vm.swappiness=1
-```
-
-Reboot and check with `cat /proc/sys/vm/swappiness`.
-
-Turn off automatic core dumps:
-
-```bash
-sudo cp ~/projects/environment/runbooks/linux/etc/50-coredump.conf /etc/sysctl.d/
-sudo sysctl -p /etc/sysctl.d/50-coredump.conf
-sudo rm /var/lib/systemd/coredump/*
-```
 
 ## Monitoring tools
 
@@ -523,78 +500,6 @@ Start peek, go to Preferences and enable "Open file manager after saving".
   - Name: Record screen with peek
   - Command: peek
   - Shortcut: Ctrl + Shift + Print
-
-## CA certificates
-
-Install CA certificates to the system storage:
-
-```bash
-sudo cp ~/projects/environment/certificates/foo_ca/* /usr/share/pki/ca-trust-source/anchors/
-sudo cp ~/projects/environment/certificates/personal_ca/ca_certificate.pem /usr/share/pki/ca-trust-source/anchors/sergei_kogan_personal_ca.pem
-sudo update-ca-trust
-```
-
-## Enable weak cryptography (temporarily)
-
-Enable weak cryptography to fix openconnect not allowing to use eToken.
-
-```bash
-sudo vi /etc/crypto-policies/back-ends/gnutls.config
-```
-
-```ini
-[overrides]
-# insecure-hash = SHA1
-```
-
-## VPN
-
-Install eToken driver:
-
-```bash
-pushd ~/Yandex.Disk/dist/fedora/vpn/safenet
-sudo rpm --import RPM-GPG-KEY-SafenetAuthenticationClient
-sudo rpm -Uvh SafenetAuthenticationClient-10.7.77-1.x86_64.rpm
-popd
-sudo mkdir -p /etc/pkcs11/modules/
-echo "module: /usr/lib64/libeTPkcs11.so" | sudo tee /etc/pkcs11/modules/eToken.module > /dev/null
-```
-
-Stop SACSrv (allegedly it starts SACMonitor which is a CPU hog):
-
-```bash
-sudo systemctl stop SACSrv.service
-sudo systemctl disable SACSrv.service
-```
-
-Try to connect to VPN manually. Find certificate URL:
-
-```bash
-# p11tool --list-token-urls
-pkcs11:model=eToken;manufacturer=SafeNet%2C%20Inc.;serial=01db911b;token=Sergey%20Kogan
-
-# p11tool --list-all-certs "pkcs11:model=eToken;manufacturer=SafeNet%2C%20Inc.;serial=01db911b;token=Sergey%20Kogan"
-
-# p11tool --login --list-privkeys pkcs11:model=eToken;manufacturer=SafeNet%2C%20Inc.;serial=01db911b;token=Sergey%20Kogan
-```
-
-Use it to connect:
-
-```bash
-sudo openconnect --no-proxy --certificate 'pkcs11:model=eToken;manufacturer=SafeNet%2C%20Inc.;serial=01db911b;token=Sergei%20Kogan;id=%5F%14%1D%3D%22%26%CE%68;object=le-SpecialSmartcardUserwithEncryp-63588;type=cert' --script /etc/vpnc/vpnc-script https://server
-```
-
-Add VPN connection to Network Manager:
-
-```bash
-sudo cp ~/projects/environment/runbooks/linux/fedora/vpn/Foo.nmconnection /etc/NetworkManager/system-connections/
-cd /etc/NetworkManager/system-connections
-sudo chown root:root Foo.nmconnection
-sudo chmod go-rw Foo.nmconnection
-sudo systemctl restart NetworkManager.service
-```
-
-VPN connection should now be visible in Settings -> Network.
 
 ## Printer
 
