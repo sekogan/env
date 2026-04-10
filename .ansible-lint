@@ -1,4 +1,0 @@
-warn_list: []  # or 'skip_list' to silence them completely
-
-skip_list:
-- '403'  # Package installs should not use latest

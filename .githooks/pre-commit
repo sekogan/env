@@ -1,7 +1,0 @@
-#!/usr/bin/sh
-
-set -e
-
-yamllint .
-ansible-playbook --syntax-check local.yml
-ansible-lint -v *.yml
