@@ -1,5 +1,3 @@
-[![CI](https://github.com/sekogan/environment/workflows/CI/badge.svg)](https://github.com/sekogan/environment/actions)
-
 # Personal Environment
 
 This repository contains instructions, scripts and resources required to recreate my personal
