@@ -213,8 +213,7 @@ git config --global credential.helper libsecret
 ```bash
 mkdir ~/projects
 cd ~/projects
-git clone https://github.com/sekogan/environment.git
-code environment
+git clone https://github.com/sekogan/env.git
 ```
 
 ## OneDrive
