@@ -1,7 +1,0 @@
-- name: Install CLI developer tools
-  become: true
-  dnf:
-    state: latest
-    name:
-    - git
-    - git-credential-libsecret

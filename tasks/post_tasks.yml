@@ -1,4 +1,0 @@
-- name: autoremove orphan packages
-  become: true
-  dnf: autoremove=yes
-  when: ansible_distribution == "Fedora"

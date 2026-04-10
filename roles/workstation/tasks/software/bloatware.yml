@@ -1,8 +1,0 @@
-- name: Uninstall bloatware
-  become: true
-  dnf:
-    state: absent
-    name:
-    - cheese
-    - orca
-    - rhythmbox

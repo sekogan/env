@@ -46,6 +46,7 @@ Open Terminal -> Preferences. Set:
 
 ```bash
 sudo dnf update --refresh
+sudo dnf autoremove
 ```
 
 ## Host name
@@ -56,15 +57,59 @@ Set host name:
 sudo hostnamectl set-hostname NEW_HOSTNAME
 ```
 
-## Run Ansible playbooks
+## Remove bloatware
 
 ```bash
-sudo dnf install ansible
+sudo dnf remove cheese orca rhythmbox
+```
 
-ansible-pull -U https://github.com/sekogan/environment.git -K
+## Package managers
 
-# If the repository is already downloaded:
-ansible-playbook local.yml -K
+Install `fedora-workstation-repositories` to enable 3rd party repos:
+
+```bash
+sudo dnf install fedora-workstation-repositories
+```
+
+Enable RPM Fusion (free):
+
+```bash
+sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+```
+
+Enable additional repositories:
+
+```bash
+sudo dnf config-manager --enable rpmfusion-nonfree-steam
+sudo dnf config-manager --enable google-chrome
+```
+
+Optionally enable RPM Fusion repos:
+
+```bash
+sudo dnf config-manager --enable rpmfusion-nonfree-nvidia-driver
+```
+
+Install flatpak and add Flathub:
+
+```bash
+sudo dnf install flatpak
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
+## System tools
+
+Install CLI utilities:
+
+```bash
+sudo dnf install curl mc ripgrep tmux vim wget
+```
+
+Install system diagnostic tools:
+
+```bash
+sudo dnf install htop iotop neofetch net-tools qdirstat strace stress sysstat
+sudo pip3 install s-tui
 ```
 
 ## Advanced Terminal
@@ -151,6 +196,10 @@ Open Preferences in Firefox:
 
 ## Git
 
+```bash
+sudo dnf install git git-credential-libsecret
+```
+
 Configure git:
 
 ```bash
@@ -210,6 +259,10 @@ source ~/.bashrc
 
 ## KeePass
 
+```bash
+sudo dnf install keepassxc
+```
+
 Start KeePassXC. Open the password database in `~/OneDrive/secrets/`.
 
 ## Github access
@@ -233,15 +286,11 @@ git push
 
 Open this file and fix encountered mishaps.
 
-## Package managers
-
-Optionally enable RPM Fusion repos:
+## Install essential packages
 
 ```bash
-sudo dnf config-manager --enable rpmfusion-nonfree-nvidia-driver
+sudo dnf install gimp meld telegram-desktop transmission vlc
 ```
-
-## Install essential packages
 
 Open Telegram and enable Night mode. Then go to Settings:
 
@@ -265,7 +314,18 @@ Open VLC, go to Preferences:
   - Cycle subtitle track = s
   - Cycle audio track = a
 
+## Audio
+
+```bash
+sudo dnf install pavucontrol
+flatpak install --user flathub com.spotify.Client
+```
+
 ## Google Chrome
+
+```bash
+sudo dnf install google-chrome-stable
+```
 
 Open Settings:
 
@@ -389,6 +449,87 @@ sudo systemctl enable undervolt
 sudo systemctl start undervolt
 ```
 
+## AMD GPU fan control
+
+Only if an AMD GPU is present:
+
+```bash
+lspci | grep VGA
+```
+
+Install the fan controller:
+
+```bash
+sudo pip3 install git+https://github.com/sekogan/amdgpu-fan.git
+```
+
+Create configuration file `/etc/amdgpu-fan.yml`:
+
+```bash
+sudo vi /etc/amdgpu-fan.yml
+```
+
+```yaml
+# Fan Control Matrix. [<Temp in C>,<Fanspeed in %>]
+speed_matrix:
+- [0, 0]
+- [50, 0]
+- [55, 40]
+- [65, 60]
+- [75, 100]
+
+temp_drop: 5
+```
+
+Create systemd service `/etc/systemd/system/amdgpu-fan.service`:
+
+```bash
+sudo vi /etc/systemd/system/amdgpu-fan.service
+```
+
+```ini
+[Unit]
+Description=amdgpu fan controller
+
+[Service]
+ExecStart=/usr/local/bin/amdgpu-fan
+Restart=always
+
+[Install]
+WantedBy=default.target
+```
+
+Enable and start:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now amdgpu-fan
+```
+
+## Intel HD Audio
+
+Only if an Intel HD Audio card is present:
+
+```bash
+lspci | grep Audio
+```
+
+Disable power saving mode immediately:
+
+```bash
+echo 0 | sudo tee /sys/module/snd_hda_intel/parameters/power_save
+```
+
+Make it persistent by creating `/etc/modprobe.d/sound.conf`:
+
+```bash
+sudo vi /etc/modprobe.d/sound.conf
+```
+
+```text
+options snd-hda-intel power_save=0
+```
+
 ## Fan control on Dell laptop
 
 NOTE: not tested on Fedora!
@@ -499,7 +640,40 @@ options iwlwifi 11n_disable=8
 options iwlmvm power_scheme=1
 ```
 
+## VPN
+
+Install eToken and OpenConnect dependencies:
+
+```bash
+sudo dnf install nss-tools pcsc-lite gnutls-utils openssl openconnect vpnc-script NetworkManager-openconnect-gnome
+```
+
+Remove opensc (makes Firefox non-responsive):
+
+```bash
+sudo dnf remove opensc
+```
+
+## Remmina
+
+If Remmina was installed as a flatpak, remove it first:
+
+```bash
+sudo flatpak remove org.remmina.Remmina
+flatpak remove --user org.remmina.Remmina
+```
+
+Install via dnf:
+
+```bash
+sudo dnf install remmina
+```
+
 ## Screen grabbers
+
+```bash
+sudo dnf install flameshot ffmpeg peek
+```
 
 Start and configure flameshot (`flameshot config`):
 

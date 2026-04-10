@@ -1,5 +1,0 @@
-- name: update package cache
-  become: true
-  dnf: update_cache=yes
-  changed_when: false
-  when: ansible_distribution == "Fedora"
