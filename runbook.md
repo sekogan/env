@@ -178,7 +178,7 @@ Add the following to `.bashrc`, if vscode is installed using flatpack:
 alias code='flatpak run com.visualstudio.code'
 ```
 
-Setup it using [this manual](../vscode.md).
+Setup it using [this manual](vscode/vscode.md).
 
 ## Firefox
 
