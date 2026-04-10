@@ -371,29 +371,7 @@ Install essential extensions:
 
 - [caffeine](https://extensions.gnome.org/extension/517/caffeine/)
   - open settings and disable everything except "Show Caffeine in top panel"
-- [gravatar](https://extensions.gnome.org/extension/1015/gravatar/)
-  - open settings and enter email
-- [Hide Keyboard Layout](https://extensions.gnome.org/extension/2848/hide-keyboard-layout/)
-- [hide-activities-button](https://extensions.gnome.org/extension/744/hide-activities-button/)
-- [remove-alttab-delay](https://extensions.gnome.org/extension/1403/remove-alttab-delay/)
-- [Guillotine](https://extensions.gnome.org/extension/3981/guillotine/)
-  - `cp ~/projects/environment/runbooks/linux/fedora/.config/guillotine.json ~/.config/`
-- [Primary Input on LockScreen](https://extensions.gnome.org/extension/4727/primary-input-on-lockscreen/)
-
-Install optional extensions:
-
-- [autohide-battery](https://extensions.gnome.org/extension/595/autohide-battery/) (removes battery icon when on AC power)
-- [bing-wallpaper-changer](https://extensions.gnome.org/extension/1262/bing-wallpaper-changer/)
-- [block-caribou](https://extensions.gnome.org/extension/1326/block-caribou/) (blocks on-screen keyboard)
-- [cpu-power-manager](https://extensions.gnome.org/extension/945/cpu-power-manager/)
-- [hide-top-bar](https://extensions.gnome.org/extension/545/hide-top-bar/)
-- [icon-hider](https://extensions.gnome.org/extension/351/icon-hider/) (removes any item from the top bar including its own icon)
-- [impatience](https://extensions.gnome.org/extension/277/impatience/) (set 0.30)
-- [remove-audio-device-selection-dialog](https://extensions.gnome.org/extension/1482/remove-audio-device-selection-dialog/)
-- [remove-dropdown-arrows](https://extensions.gnome.org/extension/800/remove-dropdown-arrows/)
-- [sound-output-device-chooser](https://extensions.gnome.org/extension/906/sound-output-device-chooser/)
-- [transparent-top-bar](https://extensions.gnome.org/extension/1708/transparent-top-bar/) (makes the top bar transparent if there are no windows near it)
-- [workspace-grid](https://extensions.gnome.org/extension/484/workspace-grid/)
+- [runcat](https://extensions.gnome.org/extension/2296/run-cat/)
 
 Remove unwanted applications from Dock.
 
