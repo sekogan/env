@@ -1,0 +1,41 @@
+{
+  "chat.editor.fontSize": 16,
+  "chat.fontSize": 16,
+  "chat.viewSessions.orientation": "stacked",
+  "debug.console.fontSize": 18,
+  "editor.autoClosingBrackets": "never",
+  "editor.autoClosingDelete": "never",
+  "editor.autoClosingOvertype": "never",
+  "editor.autoClosingQuotes": "never",
+  "editor.dragAndDrop": false,
+  "editor.fontSize": 18,
+  "editor.minimap.renderCharacters": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [80, 100],
+  "editor.tabSize": 8,
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 120,
+  "explorer.confirmDragAndDrop": true,
+  "extensions.ignoreRecommendations": true,
+  "files.trimTrailingWhitespace": true,
+  "git.blame.editorDecoration.enabled": true,
+  "scm.inputFontSize": 14,
+  "terminal.integrated.fontSize": 18,
+  "window.menuBarVisibility": "toggle",
+  "window.titleBarStyle": "custom",
+  "workbench.colorTheme": "Light Modern",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.showTabs": "single",
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.(c|cc|h)$",
+        "cmd": "git-clang-format --style=file:.clang-format -f -- ${file}"
+      }
+    ]
+  },
+  "chat.tools.terminal.autoApprove": {
+    "make": true
+  },
+  "chat.agent.maxRequests": 250
+}
