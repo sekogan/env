@@ -7,4 +7,3 @@ all:
 install:
 	install -d $(DEST)
 	install -m 644 settings.json $(DEST)/
-	install -m 644 keybindings.json $(DEST)/
