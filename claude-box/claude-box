@@ -20,12 +20,13 @@ The container image is built automatically on first run.
 configuration and session data across invocations.
 
 Options:
-  --base-image IMAGE  Base image to layer Claude Code on top of
-                      (default: node:lts-slim). The image must be
-                      Debian/Ubuntu-compatible (apt-get is required).
-                      Each distinct base image gets its own cached image.
-  --rebuild           Rebuild the container image from scratch (--no-cache)
-  -h, --help          Show this help message
+  -b, --base-image IMAGE     Base image to layer Claude Code on top of
+                             (default: node:lts-slim). Must be
+                             Debian/Ubuntu (apt-get) or RHEL/Fedora/UBI (dnf)
+                             compatible. Each distinct base image gets its own
+                             cached image.
+  --rebuild                  Rebuild the container image from scratch (--no-cache)
+  -h, --help                 Show this help message
 
 Any arguments after -- are passed directly to the claude command inside
 the container (e.g. claude-box /my/project -- --model claude-opus-4-6).
@@ -43,7 +44,7 @@ CLAUDE_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --base-image)
+        --base-image|-b)
             if [[ -z "${2:-}" ]]; then
                 echo "claude-box: --base-image requires an argument" >&2
                 usage 1
