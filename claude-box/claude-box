@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-IMAGE_NAME="claude-box:uid-$(id -u)"
 USER_NAME="$(id -un)"
 SHARE_DIR="${HOME}/.local/share/claude-box"
+
+# Derive a tag-safe slug from an image reference (e.g. "myrepo/dev:1.0" → "myrepo-dev-1-0")
+image_slug() {
+    printf '%s' "$1" | tr -cs 'a-zA-Z0-9' '-' | sed 's/^-//;s/-$//'
+}
 
 usage() {
     cat <<EOF
@@ -16,8 +20,12 @@ The container image is built automatically on first run.
 configuration and session data across invocations.
 
 Options:
-  --rebuild    Rebuild the container image from scratch (--no-cache)
-  -h, --help   Show this help message
+  --base-image IMAGE  Base image to layer Claude Code on top of
+                      (default: node:lts-slim). The image must be
+                      Debian/Ubuntu-compatible (apt-get is required).
+                      Each distinct base image gets its own cached image.
+  --rebuild           Rebuild the container image from scratch (--no-cache)
+  -h, --help          Show this help message
 
 Any arguments after -- are passed directly to the claude command inside
 the container (e.g. claude-box /my/project -- --model claude-opus-4-6).
@@ -29,11 +37,20 @@ EOF
 # Argument parsing
 # ---------------------------------------------------------------------------
 REBUILD=false
+BASE_IMAGE="node:lts-slim"
 WORK_PATH=""
 CLAUDE_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --base-image)
+            if [[ -z "${2:-}" ]]; then
+                echo "claude-box: --base-image requires an argument" >&2
+                usage 1
+            fi
+            BASE_IMAGE="$2"
+            shift 2
+            ;;
         --rebuild)
             REBUILD=true
             shift
@@ -66,6 +83,7 @@ if [[ -z "$WORK_PATH" ]]; then
     usage 1
 fi
 
+IMAGE_NAME="claude-box:uid-$(id -u)-$(image_slug "$BASE_IMAGE")"
 WORK_DIR="$(realpath "$WORK_PATH")"
 
 if [[ ! -d "$WORK_DIR" ]]; then
@@ -85,6 +103,7 @@ build_image() {
     echo "claude-box: building image ${IMAGE_NAME} ..." >&2
     podman build \
         "${extra_args[@]}" \
+        --build-arg BASE_IMAGE="$BASE_IMAGE" \
         --build-arg USER_UID="$(id -u)" \
         --build-arg USER_GID="$(id -g)" \
         --build-arg USER_NAME="$USER_NAME" \

@@ -1,4 +1,5 @@
-FROM node:lts-slim
+ARG BASE_IMAGE=node:lts-slim
+FROM ${BASE_IMAGE}
 
 ARG USER_UID=1000
 ARG USER_GID=1000
