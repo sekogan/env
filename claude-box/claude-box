@@ -180,6 +180,19 @@ fi
 mkdir -p "${HOME}/.claude"
 
 # ---------------------------------------------------------------------------
+# Git config mounts (read-only)
+# System gitconfig (/etc/gitconfig) is not relabelled (:z omitted) to avoid
+# permanently changing SELinux labels on shared system files.
+# ---------------------------------------------------------------------------
+GIT_CONFIG_MOUNTS=()
+[[ -f "${HOME}/.gitconfig" ]] && \
+    GIT_CONFIG_MOUNTS+=(-v "${HOME}/.gitconfig:/home/${USER_NAME}/.gitconfig:ro,z")
+[[ -d "${HOME}/.config/git" ]] && \
+    GIT_CONFIG_MOUNTS+=(-v "${HOME}/.config/git:/home/${USER_NAME}/.config/git:ro,z")
+[[ -f "/etc/gitconfig" ]] && \
+    GIT_CONFIG_MOUNTS+=(-v "/etc/gitconfig:/etc/gitconfig:ro")
+
+# ---------------------------------------------------------------------------
 # Run
 #
 # --userns=keep-id   maps the host UID:GID to the same UID:GID inside the
@@ -204,5 +217,6 @@ exec podman run \
     -v "${PWD}:/workspace:z" \
     -v "${HOME}/.claude.json:/home/${USER_NAME}/.claude.json:z" \
     -v "${HOME}/.claude:/home/${USER_NAME}/.claude:z" \
+    "${GIT_CONFIG_MOUNTS[@]+"${GIT_CONFIG_MOUNTS[@]}"}" \
     "$IMAGE_NAME" \
     "${CLAUDE_ARGS[@]+"${CLAUDE_ARGS[@]}"}"
